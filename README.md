@@ -40,6 +40,9 @@ Application Admin) manage **membership** and role grants on their own
 list, without touching the connector or needing any Teleport admin
 role themselves.
 
+See `DIAGRAM.md` for a visual walkthrough of how the connector and
+Access Lists both feed into roles.
+
 ## Files in this repo
 
 - `connector/oidc-google.example.yaml` — the OIDC connector mapping

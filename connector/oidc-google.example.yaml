@@ -1,0 +1,54 @@
+# EXAMPLE ONLY — placeholders throughout, no real credentials.
+# See README.md "Important: how Google Group membership actually
+# reaches Teleport" before editing this file.
+kind: oidc
+version: v3
+metadata:
+  name: google
+spec:
+  issuer_url: https://accounts.google.com
+  client_id: <OAUTH_CLIENT_ID>.apps.googleusercontent.com
+  client_secret: <OAUTH_CLIENT_SECRET>
+  redirect_url: https://<proxy-address>/v1/webapi/oidc/callback
+  display: Google
+
+  scope:
+    - openid
+    - email
+    - profile
+
+  # Impersonated to call the Admin SDK Directory API for group lookups.
+  # Must be a real Workspace super admin. Does NOT need to change when
+  # groups/roles change — see README.
+  google_admin_email: <WORKSPACE_ADMIN_EMAIL>
+
+  # Full JSON key for the service account used for domain-wide
+  # delegation. The domain-wide delegation scope grant itself lives in
+  # the Google Admin console (Security > API Controls > Domain-wide
+  # Delegation), tied to this service account's numeric Client ID —
+  # not here. See README for details.
+  google_service_account: |2-
+    {
+      "type": "service_account",
+      "project_id": "<GCP_PROJECT_ID>",
+      "private_key_id": "<PRIVATE_KEY_ID>",
+      "private_key": "<PRIVATE_KEY>",
+      "client_email": "<SERVICE_ACCOUNT_EMAIL>",
+      "client_id": "<SERVICE_ACCOUNT_NUMERIC_CLIENT_ID>",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "<CLIENT_X509_CERT_URL>",
+      "universe_domain": "googleapis.com"
+    }
+
+  claims_to_roles:
+    - claim: groups
+      value: teleport-super-admins@acmecorp.io
+      roles: ["editor"]
+    - claim: groups
+      value: teleport-auditor-admins@acmecorp.io
+      roles: ["auditor"]
+    - claim: groups
+      value: teleport-integration-admins@acmecorp.io
+      roles: ["role-integration-admin"]

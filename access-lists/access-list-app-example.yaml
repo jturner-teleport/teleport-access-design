@@ -1,0 +1,18 @@
+# EXAMPLE ONLY. One Access List per app, owned by that app's
+# Application Admin. The owner manages membership here directly —
+# no connector or Super Admin involvement needed to add/remove users.
+kind: access_list
+version: v1
+metadata:
+  name: app-example-app-access
+spec:
+  title: "Example App Access"
+  owners:
+    - name: jdoe@acmecorp.io
+  grants:
+    roles: ["role-app-readonly"]
+  membership_requires:
+    roles: []
+  audit:
+    recurrence:
+      frequency: "4320h0m0s" # 180 days

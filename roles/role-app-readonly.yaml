@@ -1,0 +1,16 @@
+# EXAMPLE ONLY. Granted to App Users via Access List membership, not
+# via the connector — see access-lists/access-list-app-example.yaml.
+kind: role
+version: v7
+metadata:
+  name: role-app-readonly
+spec:
+  allow:
+    app_labels:
+      app: example-app
+    rules:
+      - resources: [session]
+        verbs: [list, read]
+  deny:
+    node_labels:
+      "*": "*"

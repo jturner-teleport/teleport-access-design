@@ -1,0 +1,16 @@
+# EXAMPLE ONLY. See OPEN_QUESTIONS.md #5 — token creation isn't
+# scoped to the admin's own app, this role can mint join tokens for
+# any resource type.
+kind: role
+version: v7
+metadata:
+  name: role-application-admin
+spec:
+  allow:
+    rules:
+      - resources: [token]
+        verbs: [create, read, list]
+      - resources: [access_list]
+        verbs: [read, update]
+    app_labels:
+      owner: "{{external.email}}"

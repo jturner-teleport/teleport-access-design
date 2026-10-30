@@ -1,0 +1,25 @@
+# EXAMPLE ONLY — NOT SAFE AS WRITTEN. See OPEN_QUESTIONS.md #1.
+#
+# As written, `role: create/update` lets an org admin create a new
+# role granting themselves full cluster access and attach it to an
+# Access List they own. Do not grant this role until #1 is resolved —
+# either restrict to Access List membership/grants from a
+# pre-approved role catalog, or manage roles via GitOps/PR review
+# instead of direct `role` resource access.
+kind: role
+version: v7
+metadata:
+  name: role-org-delegated-admin
+spec:
+  allow:
+    rules:
+      - resources: [access_list]
+        verbs: ["*"]
+      - resources: [role]
+        verbs: [create, read, update, list]
+  deny:
+    rules:
+      - resources: [role]
+        verbs: [delete]
+      - resources: [user, oidc, saml, github]
+        verbs: ["*"]

@@ -1,0 +1,19 @@
+# EXAMPLE ONLY. One Access List per org, owned by that org's
+# Org Delegated Admin. See OPEN_QUESTIONS.md #1 before granting
+# role-org-delegated-admin as the owner's underlying role — as
+# written it can escalate to full cluster admin.
+kind: access_list
+version: v1
+metadata:
+  name: org-example-team-access
+spec:
+  title: "Example Team Access"
+  owners:
+    - name: jdoe@acmecorp.io
+  grants:
+    roles: ["role-app-readonly"]
+  membership_requires:
+    roles: []
+  audit:
+    recurrence:
+      frequency: "4320h0m0s" # 180 days

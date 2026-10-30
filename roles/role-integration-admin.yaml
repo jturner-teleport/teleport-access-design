@@ -1,0 +1,18 @@
+# EXAMPLE ONLY. See OPEN_QUESTIONS.md #4 — "integration" is not
+# sub-scoped by provider, so this is broader than "AWS only" in
+# practice.
+kind: role
+version: v7
+metadata:
+  name: role-integration-admin
+spec:
+  allow:
+    rules:
+      - resources: [integration]
+        verbs: ["*"]
+      - resources: [token]
+        verbs: [create, read, list]
+  deny:
+    rules:
+      - resources: [role, user]
+        verbs: ["*"]

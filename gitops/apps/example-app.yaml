@@ -1,0 +1,14 @@
+# EXAMPLE ONLY. One file per app, owned by that app's Application
+# Admin via CODEOWNERS (see ../CODEOWNERS.example). The Application
+# Admin edits this file and opens a PR instead of calling
+# `tctl update` directly in Teleport.
+kind: app
+version: v3
+metadata:
+  name: example-app
+  labels:
+    owner: jdoe@acmecorp.io
+    env: production
+spec:
+  uri: http://localhost:8080
+  public_addr: example-app.acmecorp.io

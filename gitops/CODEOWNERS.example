@@ -1,0 +1,15 @@
+# EXAMPLE ONLY. Rename to CODEOWNERS (or place at .github/CODEOWNERS)
+# to activate. Each app's file is owned by that app's own admin
+# team — they can approve changes to their app, and only their app.
+#
+# The platform/Super Admin team must own this file itself, and the
+# CI workflow file, so an Application Admin can't grant themselves
+# ownership of another app. See gitops/README.md caveat #1.
+
+/gitops/apps/example-app.yaml       @acmecorp/example-app-admins
+
+# Protect the boundary-defining files from the admins they scope:
+/gitops/CODEOWNERS.example          @acmecorp/platform-team
+/gitops/ci-example/                 @acmecorp/platform-team
+/gitops/roles/                      @acmecorp/platform-team
+/gitops/tokens/                     @acmecorp/platform-team

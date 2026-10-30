@@ -1,0 +1,17 @@
+# EXAMPLE ONLY. Granted to the CI bot's Machine ID identity, never
+# to a human. Intentionally broad on `app` — the per-app boundary is
+# enforced by CODEOWNERS/branch protection in git, not by this role.
+# See gitops/README.md caveat #3.
+kind: role
+version: v7
+metadata:
+  name: role-app-definitions-bot
+spec:
+  allow:
+    rules:
+      - resources: [app]
+        verbs: [list, read, create, update, delete]
+  deny:
+    rules:
+      - resources: [role, user, token, access_list, oidc, saml, github]
+        verbs: ["*"]

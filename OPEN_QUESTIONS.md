@@ -62,17 +62,34 @@ primary use case today? If hard, this boundary needs to be enforced by
 process/training rather than RBAC, since Teleport doesn't offer a
 built-in "AWS-only" scope on the `integration` resource.
 
-## 5. Application Admin join-token scope is broader than "their app"
+## 5. Application Admin scope is broader than "their app" — RESOLVED (pattern, not RBAC)
 
-`token: create` isn't restricted to App-type joins — the same
-permission can mint tokens for Node, Kube, DB, or Windows Desktop joins
-too, not just the app a given admin owns.
+Two related gaps, both with the same root cause: Teleport's generic
+`rules` mechanism for CRUD verbs (`create`/`update`/`delete`) on a
+resource kind is cluster-wide — it isn't filtered by labels the way
+connection-type access (`app_labels`, `node_labels`, etc.) is.
 
-**Needs a decision** — if strict app-only token minting is required,
-that needs additional guardrails (process convention, or auditing
-token-creation events against expected app labels), since Teleport
-RBAC doesn't natively scope token creation by target resource type per
-role.
+- `token: create` isn't restricted to App-type joins — the same
+  permission can mint tokens for Node, Kube, DB, or Windows Desktop
+  joins too, not just the app a given admin owns.
+- `app: update` (editing an app's own resource definition — URI,
+  public_addr, labels) isn't restricted to apps the admin owns either
+  — granting it grants edit rights to **every** app in the cluster.
+  Confirmed against Teleport's docs: `where` predicate filtering on
+  `rules` only supports `session`/`session_tracker` fields, and
+  Teleport explicitly documents `token` (and by the same mechanism,
+  `app`) CRUD as not scoped to a resource context.
+
+**There is no RBAC-only fix for either of these.** The scoping has to
+move outside Teleport. For editing app definitions specifically, see
+`gitops/README.md` — a GitOps pattern using CODEOWNERS + branch
+protection to enforce the per-app boundary in git, with a CI bot
+(Machine ID, GitHub Actions OIDC join, no static token) holding the
+necessarily-broad `app:update` permission instead of any human. The
+same pattern applies to the token-minting gap: don't give humans
+`token:create` at all — use identity-based join methods (AWS/GCP/Azure/
+Kubernetes/CI-OIDC) so no one needs to mint a token by hand, or route
+token issuance through the same bot-plus-review pipeline.
 
 ## 6. Nested Google Groups
 

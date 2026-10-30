@@ -1,0 +1,15 @@
+# EXAMPLE ONLY. GitHub Actions OIDC join method — no static secret
+# to mint, store, or rotate, per the earlier recommendation to avoid
+# human-held token:create permissions.
+kind: token
+version: v2
+metadata:
+  name: github-actions-app-bot
+spec:
+  roles: [Bot]
+  bot_name: app-definitions-bot
+  github:
+    allow:
+      - repository: acmecorp/app-definitions
+        ref: refs/heads/main
+        ref_type: branch

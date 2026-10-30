@@ -1,0 +1,41 @@
+# EXAMPLE ONLY. Copy into .github/workflows/ in your real
+# app-definitions repo to activate — left out of .github/workflows/
+# here so this example repo doesn't try to run it.
+name: Apply App Definitions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "gitops/apps/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Fetch Teleport binaries
+        uses: teleport-actions/setup@v1
+        with:
+          version: "16.0.0"
+
+      - name: Authenticate via Machine ID (GitHub Actions join)
+        uses: teleport-actions/auth@v2
+        with:
+          proxy: example.teleport.sh:443
+          token: github-actions-app-bot
+
+      - name: Apply changed app definitions only
+        run: |
+          set -euo pipefail
+          for f in $(git diff --name-only HEAD^ HEAD -- gitops/apps/); do
+            echo "Applying $f"
+            tctl create -f "$f"
+          done

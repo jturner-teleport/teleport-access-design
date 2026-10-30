@@ -59,6 +59,10 @@ role themselves.
   org, owned by that org's Delegated Admin.
 - `OPEN_QUESTIONS.md` — unresolved design questions and caveats that
   should be answered before this goes to production.
+- `gitops/` — a GitOps pattern (CODEOWNERS + CI bot) for letting an
+  Application Admin edit only their own app, since that can't be
+  expressed as plain Teleport RBAC — see `gitops/README.md` and
+  `OPEN_QUESTIONS.md` #5.
 
 ## Important: how Google Group membership actually reaches Teleport
 
